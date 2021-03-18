@@ -49,14 +49,44 @@ class MusicDetailViewController: UIViewController {
             
         }catch {
             print("error")
-           
+            
         }
-    
+        
     }
     
     func UIBind() {
         musicImageView.image = UIImage(named: "\(musicArr[position]).jpeg")
         musicTitleLabel.text = musicArr[position]
         
+        
+        musicSlider.addTarget(self, action: #selector(adjustVolume(_slider:)), for: .valueChanged)
+        musicButton.addTarget(self, action: #selector(musicButtonPlay), for: .touchDown)
+    }
+    
+}
+
+
+extension MusicDetailViewController{
+    @objc func musicButtonPlay() {
+        if player?.isPlaying == true {
+            player?.pause()
+            musicButton.setBackgroundImage(UIImage(systemName: "play.fill"), for: .normal)
+            UIView.animate(withDuration: 0.2, animations: {
+                self.musicImageView.frame = CGRect(x: 30, y : 30, width: self.view.frame.size.width - 60, height: self.view.frame.size.height - 60)
+            })
+        }
+        else {
+            player?.play()
+            musicButton.setBackgroundImage(UIImage(systemName: "pause.fill"), for: .normal)
+            
+            UIView.animate(withDuration: 0.2, animations: {
+                self.musicImageView.frame = CGRect(x : 10, y : 10, width: self.view.frame.size.width - 20, height: self.view.frame.size.height - 20)
+                
+            })
+        }
+    }
+    @objc func adjustVolume(_slider : UISlider) {
+        let value = _slider.value
+        player?.volume = value
     }
 }
